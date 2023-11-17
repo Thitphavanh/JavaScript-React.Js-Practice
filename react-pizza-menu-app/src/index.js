@@ -77,11 +77,14 @@ function Menu() {
       <h2>เมนูของพวกเรา</h2>
 
       {numPizzas > 0 ? (
-        <ul className="pizzas">
-          {pizzas.map((pizza) => (
-            <Pizza pizzaObj={pizza} key={pizza.name} />
-          ))}
-        </ul>
+        <>
+          <p>CLOSED</p>
+          <ul className="pizzas">
+            {pizzas.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
       ) : (
         <p>พวกเรายินดีต้อนรับ :)</p>
       )}
@@ -103,18 +106,25 @@ function Menu() {
   );
 }
 
-function Pizza(props) {
-  console.log(props);
+function Pizza({ pizzaObj }) {
+  console.log(pizzaObj);
 
-  if (props.pizzaObj.soldOut) return null;
+  // if (pizzaObj.soldOut) return null;
 
   return (
-    <li className="pizza">
-      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredients}</p>
-        <span>{props.pizzaObj.price + 3}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+
+        {/* {pizzaObj.soldOut ? (
+          <span>Pizza หมดแล้ว</span>
+        ) : (
+          <span>{pizzaObj.price}</span>
+        )} */}
+
+        <span>{pizzaObj.soldOut ? "Pizza หมดแล้ว" : pizzaObj.price}</span>
       </div>
     </li>
   );
@@ -122,7 +132,7 @@ function Pizza(props) {
 
 function Footer() {
   const hour = new Date().getHours();
-  const openHour = 20;
+  const openHour = 12;
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
 
@@ -136,19 +146,28 @@ function Footer() {
   return (
     <footer className="footer">
       {isOpen ? (
-        <div className="order">
-          <p>พวกเราเปิดร้านให้บริการจนถีงเวลา {closeHour}:00 นาฬิกา</p>
-          <button className="btn">สั่งซื้อ</button>
-        </div>
+        <Order closeHour={closeHour} openHour={openHour} />
       ) : (
         <p>
-          พวกเรายินดีให้บริการตั้งแต่เวลา {openHour}:00 นาฬิกา ถืง {closeHour}
+          พวกเรายินดีบริการตั้งแต่เวลา {openHour}:00 นาฬิกา ถืง {closeHour}
           :00 นาฬิกา
         </p>
       )}
     </footer>
   );
   //   return React.createElement("footer", null, "We're currently open!");
+}
+
+function Order({ closeHour, openHour }) {
+  return (
+    <div className="order">
+      <p>
+        พวกเราให้บริการเปิดร้าน ตั้งแต่เวลา {openHour}:00 นาฬิกา จนถีง{" "}
+        {closeHour}:00 นาฬิกา
+      </p>
+      <button className="btn">สั่งซื้อ</button>
+    </div>
+  );
 }
 
 // React v18
@@ -160,4 +179,4 @@ root.render(
   </React.StrictMode>
 );
 
-// https://www.bilibili.com/video/BV1is4y167yY/?p=43&spm_id_from=pageDriver&vd_source=f6e7bb5a0f60c0f419dd231d466f3883
+// https://www.bilibili.com/video/BV1is4y167yY/?p=50&spm_id_from=pageDriver&vd_source=f6e7bb5a0f60c0f419dd231d466f3883
